@@ -2,26 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Subscribe | Nautilus Architects</title>
+    <title>Subscribe</title>
     <link
+      href="https://cdn-images.mailchimp.com/embedcode/classic-061523.css"
       rel="stylesheet"
-      href="//cdn-images.mailchimp.com/embedcode/classic-061523.css"
+      type="text/css"
     />
     <style>
-      body {
-        font-family: Helvetica, Arial, sans-serif;
-        padding: 2rem;
-        background: #f5f5f5;
-      }
-
       #mc_embed_signup {
         background: #fff;
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        clear: left;
+        font: 14px Helvetica, Arial, sans-serif;
+        width: 600px;
+        margin: 2rem auto;
       }
     </style>
   </head>
@@ -35,14 +28,12 @@
           name="mc-embedded-subscribe-form"
           class="validate"
           target="_blank"
-          onsubmit="handleFormSubmit()"
         >
           <div id="mc_embed_signup_scroll">
             <h2>Subscribe</h2>
             <div class="indicates-required">
               <span class="asterisk">*</span> indicates required
             </div>
-
             <div class="mc-field-group">
               <label for="mce-EMAIL"
                 >Email Address <span class="asterisk">*</span></label
@@ -55,16 +46,22 @@
                 required
               />
             </div>
-
             <div class="mc-field-group">
               <label for="mce-FNAME">First Name </label>
-              <input type="text" name="FNAME" class="text" id="mce-FNAME" />
+              <input type="text" name="FNAME" id="mce-FNAME" />
             </div>
-
             <div class="mc-field-group">
               <label for="mce-LNAME">Last Name </label>
-              <input type="text" name="LNAME" class="text" id="mce-LNAME" />
+              <input type="text" name="LNAME" id="mce-LNAME" />
             </div>
+
+            <!-- Hidden "From" field -->
+            <input
+              type="hidden"
+              name="QRCODEFORM"
+              id="mce-QRCODEFORM"
+              value="Car Enthusiast"
+            />
 
             <div id="mce-responses" class="clear">
               <div
@@ -103,9 +100,36 @@
       </div>
     </div>
 
-    <!-- Mailchimp validation script -->
-    <script src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
     <script>
+      const redirectUrl =
+        'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
+
+      console.log(localStorage);
+
+      // Check localStorage and redirect immediately if already subscribed
+      if (localStorage.getItem('nautilus_subscribed') === 'true') {
+        window.location.href = redirectUrl;
+      }
+
+      // Wait for Mailchimp to inject response
+      const observer = new MutationObserver(() => {
+        const success = document.querySelector('#mce-success-response');
+        if (success && success.style.display !== 'none') {
+          localStorage.setItem('nautilus_subscribed', 'true');
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 500); // Let the success message flash briefly
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+    </script>
+
+    <script
+      type="text/javascript"
+      src="https://s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"
+    ></script>
+    <script type="text/javascript">
       (function ($) {
         window.fnames = new Array();
         window.ftypes = new Array();
@@ -123,27 +147,6 @@
         ftypes[5] = 'text';
       })(jQuery);
       var $mcj = jQuery.noConflict(true);
-    </script>
-
-    <!-- Redirect & localStorage logic -->
-    <script>
-      const redirectURL =
-        'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
-
-      // Redirect if already subscribed
-      if (localStorage.getItem('nautilus_subscribed') === 'true') {
-        window.location.href = redirectURL;
-      }
-
-      // Handle setting localStorage on form submission
-      function handleFormSubmit() {
-        localStorage.setItem('nautilus_subscribed', 'true');
-        window.location.href = redirectURL;
-        return true;
-        // We let Mailchimp redirect on successful submission
-        // Optional: Redirect immediately from here instead (comment/uncomment below)
-        // window.location.href = redirectURL;
-      }
     </script>
   </body>
 </html>
