@@ -106,8 +106,12 @@
 
       console.log(localStorage);
 
-      // Check localStorage and redirect immediately if already subscribed
-      if (localStorage.getItem('nautilus_subscribed') === 'true') {
+      // Allow bypass with ?debug=true
+      const params = new URLSearchParams(window.location.search);
+      const isDebug = params.get('debug') === 'true';
+
+      // Check localStorage and redirect immediately if already subscribed (unless in debug mode)
+      if (!isDebug && localStorage.getItem('nautilus_subscribed') === 'true') {
         window.location.href = redirectUrl;
       }
 
