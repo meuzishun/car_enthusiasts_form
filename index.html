@@ -12,9 +12,119 @@
       #mc_embed_signup {
         background: #fff;
         clear: left;
-        font: 14px Helvetica, Arial, sans-serif;
-        width: 600px;
-        margin: 2rem auto;
+        font: 16px 'Segoe UI', Helvetica, Arial, sans-serif;
+        width: 100%;
+        max-width: 480px;
+        margin: 2.5rem auto;
+        border-radius: 18px;
+        box-shadow: 0 6px 32px rgba(0, 0, 0, 0.1),
+          0 1.5px 4px rgba(0, 0, 0, 0.06);
+        padding: 2.5rem 2rem 2rem 2rem;
+      }
+
+      #mc_embed_signup h2 {
+        font-size: 1.7rem;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+        text-align: center;
+        letter-spacing: 0.02em;
+      }
+
+      #mc_embed_signup p {
+        color: #444;
+        margin: 0.5rem 0 1rem 0;
+        text-align: center;
+      }
+
+      #mc_embed_signup .mc-field-group {
+        margin-bottom: 1.2rem;
+      }
+
+      #mc_embed_signup label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        color: #222;
+      }
+
+      #mc_embed_signup input[type='email'],
+      #mc_embed_signup input[type='text'] {
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        font-size: 1rem;
+        background: #f9fafb;
+        transition: border 0.2s;
+      }
+
+      #mc_embed_signup input[type='email']:focus,
+      #mc_embed_signup input[type='text']:focus {
+        border-color: #0077ff;
+        outline: none;
+        background: #fff;
+      }
+
+      #mc_embed_signup input.button[type='submit'],
+      #mc_embed_signup .button {
+        float: none !important;
+        display: block !important;
+        margin: 1rem auto 0 auto !important;
+        text-align: center !important;
+        background: linear-gradient(90deg, #0077ff 0%, #00c6ff 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 7px !important;
+        padding: 0.95rem 2.2rem !important; /* slightly more vertical padding */
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        box-shadow: 0 2px 8px rgba(0, 119, 255, 0.08) !important;
+        transition: background 0.2s, transform 0.1s !important;
+        width: 100% !important;
+        max-width: 260px !important;
+        line-height: 1.6 !important; /* increase line-height for vertical centering */
+        vertical-align: middle !important;
+        height: auto !important; /* let padding/line-height control height */
+      }
+
+      #mc_embed_signup input.button[type='submit']:hover,
+      #mc_embed_signup .button:hover {
+        background: linear-gradient(90deg, #005fcc 0%, #0099cc 100%) !important;
+        transform: translateY(-2px) scale(1.03) !important;
+      }
+
+      #mc_embed_signup ul {
+        margin: 1.5rem 0 0 0;
+        padding-left: 1.2rem;
+        color: #222;
+      }
+
+      #mc_embed_signup ul li {
+        margin-bottom: 0.7rem;
+        font-size: 1rem;
+      }
+
+      #mc_embed_signup .indicates-required {
+        font-size: 0.95rem;
+        color: #888;
+        margin-bottom: 1.2rem;
+        text-align: right;
+      }
+
+      #mc_embed_signup .asterisk {
+        color: #e02424;
+      }
+
+      #mc_embed_signup_scroll {
+        padding-bottom: 0.5rem;
+      }
+
+      @media (max-width: 600px) {
+        #mc_embed_signup {
+          padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+          max-width: 98vw;
+        }
       }
     </style>
   </head>
