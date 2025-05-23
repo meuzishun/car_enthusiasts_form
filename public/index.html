@@ -127,12 +127,9 @@
     <div id="mc_embed_shell">
       <div id="mc_embed_signup">
         <form
-          action="https://nautilusarchitects.us2.list-manage.com/subscribe/post?u=1e7a8bb7846f7d3736196772a&amp;id=845f442b9d&amp;f_id=00e8fbe3f0"
-          method="post"
           id="mc-embedded-subscribe-form"
           name="mc-embedded-subscribe-form"
           class="validate"
-          target="_self"
           novalidate=""
         >
           <div id="mc_embed_signup_scroll">
@@ -159,7 +156,7 @@
               >
               <input
                 type="email"
-                name="EMAIL"
+                name="email"
                 class="required email"
                 id="mce-EMAIL"
                 required=""
@@ -170,7 +167,7 @@
               <label for="mce-FNAME">First Name </label>
               <input
                 type="text"
-                name="FNAME"
+                name="firstName"
                 class="text"
                 id="mce-FNAME"
                 value=""
@@ -180,7 +177,7 @@
               <label for="mce-LNAME">Last Name </label>
               <input
                 type="text"
-                name="LNAME"
+                name="lastName"
                 class="text"
                 id="mce-LNAME"
                 value=""
@@ -201,14 +198,6 @@
                 style="display: none"
               ></div>
             </div>
-            <div aria-hidden="true" style="position: absolute; left: -5000px">
-              <input
-                type="text"
-                name="b_1e7a8bb7846f7d3736196772a_845f442b9d"
-                tabindex="-1"
-                value=""
-              />
-            </div>
             <div class="clear">
               <input
                 type="submit"
@@ -218,7 +207,6 @@
                 value="Subscribe"
               />
             </div>
-
             <ul>
               <li>✔ A personal welcome from the design team</li>
               <li>
@@ -236,32 +224,59 @@
       </div>
     </div>
     <script>
-      const redirectUrl =
-        'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
+      // Remove the old redirect logic, handle everything in JS now
 
-      console.log(localStorage);
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('mc-embedded-subscribe-form');
+        const errorDiv = document.getElementById('mce-error-response');
+        const successDiv = document.getElementById('mce-success-response');
+        const redirectUrl =
+          'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
 
-      // Allow bypass with ?debug=true
-      const params = new URLSearchParams(window.location.search);
-      const isDebug = params.get('debug') === 'true';
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
 
-      // Check localStorage and redirect immediately if already subscribed (unless in debug mode)
-      if (!isDebug && localStorage.getItem('nautilus_subscribed') === 'true') {
-        window.location.href = redirectUrl;
-      }
+          // Hide previous messages
+          errorDiv.style.display = 'none';
+          successDiv.style.display = 'none';
 
-      // Wait for Mailchimp to inject response
-      const observer = new MutationObserver(() => {
-        const success = document.querySelector('.confirm-thanks-header');
-        if (success && success.style.display !== 'none') {
-          localStorage.setItem('nautilus_subscribed', 'true');
-          setTimeout(() => {
-            window.location.href = redirectUrl;
-          }, 500); // Let the success message flash briefly
-        }
+          const formData = new FormData(form);
+          const data = {
+            email: formData.get('email'),
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+          };
+
+          try {
+            const response = await fetch('/subscribe', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (response.redirected) {
+              // If the server redirects, follow it
+              window.location.href = response.url;
+              return;
+            }
+
+            if (response.ok) {
+              // Show a success message if not redirected
+              successDiv.textContent = 'Thank you for subscribing!';
+              successDiv.style.display = 'block';
+            } else {
+              // Show an error message
+              errorDiv.textContent = 'Something went wrong. Please try again.';
+              errorDiv.style.display = 'block';
+            }
+          } catch (err) {
+            errorDiv.textContent = 'Network error. Please try again.';
+            errorDiv.style.display = 'block';
+          }
+        });
       });
-
-      observer.observe(document.body, { childList: true, subtree: true });
     </script>
   </body>
 </html>
