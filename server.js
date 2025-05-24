@@ -26,8 +26,12 @@ app.post('/subscribe', async (req, res) => {
 
   // 1. Add or update the subscriber
   try {
-    await axios.post(
-      `https://${SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${LIST_ID}/members`,
+    const subscriberHash = crypto
+      .createHash('md5')
+      .update(email.toLowerCase())
+      .digest('hex');
+    await axios.put(
+      `https://${SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${LIST_ID}/members/${subscriberHash}`,
       {
         email_address: email,
         status: 'subscribed',
@@ -44,6 +48,7 @@ app.post('/subscribe', async (req, res) => {
       }
     );
   } catch (err) {
+    console.error('Mailchimp error:', err.response?.data || err.message);
     const detail = err.response?.data?.detail || '';
     if (detail.includes('was permanently deleted and cannot be re-imported')) {
       return res.status(400).json({
