@@ -225,6 +225,21 @@
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+        // Check for debug=true in URL params
+        const params = new URLSearchParams(window.location.search);
+        const isDebug = params.get('debug') === 'true';
+
+        // Redirect if already subscribed (unless debug mode)
+        const redirectUrl =
+          'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
+        if (
+          !isDebug &&
+          localStorage.getItem('nautilus_subscribed') === 'true'
+        ) {
+          window.location.href = redirectUrl;
+          return;
+        }
+
         const form = document.getElementById('mc-embedded-subscribe-form');
         const errorDiv = document.getElementById('mce-error-response');
         const successDiv = document.getElementById('mce-success-response');
@@ -254,7 +269,11 @@
             const result = await response.json();
 
             if (result.success && result.redirectUrl) {
-              window.location.href = result.redirectUrl;
+              // Set flag in localStorage
+              localStorage.setItem('nautilus_subscribed', 'true');
+              if (!isDebug) {
+                window.location.href = result.redirectUrl;
+              }
             } else {
               errorDiv.textContent = 'Something went wrong. Please try again.';
               errorDiv.style.display = 'block';
