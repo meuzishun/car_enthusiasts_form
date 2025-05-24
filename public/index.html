@@ -224,21 +224,16 @@
       </div>
     </div>
     <script>
-      // Remove the old redirect logic, handle everything in JS now
-
       document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('mc-embedded-subscribe-form');
         const errorDiv = document.getElementById('mce-error-response');
         const successDiv = document.getElementById('mce-success-response');
-        const redirectUrl =
-          'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946';
 
         form.addEventListener('submit', async function (e) {
           e.preventDefault();
 
-          // Hide previous messages
-          errorDiv.style.display = 'none';
-          successDiv.style.display = 'none';
+          errorDiv && (errorDiv.style.display = 'none');
+          successDiv && (successDiv.style.display = 'none');
 
           const formData = new FormData(form);
           const data = {
@@ -256,18 +251,11 @@
               body: JSON.stringify(data),
             });
 
-            if (response.redirected) {
-              // If the server redirects, follow it
-              window.location.href = response.url;
-              return;
-            }
+            const result = await response.json();
 
-            if (response.ok) {
-              // Show a success message if not redirected
-              successDiv.textContent = 'Thank you for subscribing!';
-              successDiv.style.display = 'block';
+            if (result.success && result.redirectUrl) {
+              window.location.href = result.redirectUrl;
             } else {
-              // Show an error message
               errorDiv.textContent = 'Something went wrong. Please try again.';
               errorDiv.style.display = 'block';
             }

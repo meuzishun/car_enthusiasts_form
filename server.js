@@ -24,7 +24,8 @@ app.post('/subscribe', async (req, res) => {
   const { email, firstName, lastName } = req.body;
 
   try {
-    await axios.post(
+    // 1. Add or update the subscriber
+    const memberRes = await axios.post(
       `https://${SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${LIST_ID}/members`,
       {
         email_address: email,
@@ -42,13 +43,42 @@ app.post('/subscribe', async (req, res) => {
       }
     );
 
-    // Redirect to custom success page
-    res.redirect(
-      'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946'
+    // 2. Add the "Luxury on the Move" tag to the subscriber
+    const subscriberHash = Buffer.from(email.toLowerCase()).toString('hex');
+    await axios.post(
+      `https://${SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${LIST_ID}/members/${subscriberHash}/tags`,
+      {
+        tags: [
+          {
+            name: 'Luxury on the Move',
+            status: 'active',
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `apikey ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
     );
+
+    res.json({
+      success: true,
+      redirectUrl:
+        'https://linktr.ee/nautilusarchitects1?ltsid=8499382f-5ebe-4a48-b2d3-cf2ac3e92946',
+    });
   } catch (err) {
-    console.error('Mailchimp Error:', err.response?.data || err.message);
-    res.redirect('/error.html');
+    const detail = err.response?.data?.detail || '';
+    if (detail.includes('was permanently deleted and cannot be re-imported')) {
+      res.status(400).json({
+        success: false,
+        message:
+          'This email address was previously deleted and cannot be re-added automatically. Please check your inbox for a re-subscription email or contact us for help.',
+      });
+    } else {
+      res.status(400).json({ success: false, message: 'Subscription failed.' });
+    }
   }
 });
 
